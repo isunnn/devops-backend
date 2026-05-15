@@ -1,4 +1,4 @@
-name: CI/CD - Build, Push to Docker Hub, Deploy to EC2-Back (SSM)
+name: CI/CD 
 
 on:
   push:
@@ -58,7 +58,7 @@ jobs:
           aws ssm send-command \
             --instance-ids "${{ secrets.EC2_BACK_INSTANCE_ID }}" \
             --document-name "AWS-RunShellScript" \
-            --comment "Deploy backend (ventas+despacho) from Docker Hub - GitHub Actions ${GITHUB_SHA}" \
+            --comment "Deploy backend ${SHORT_SHA}" \
             --parameters commands='[
               "set -e",
               "cd /home/ec2-user/deploy-backend || cd ~/deploy-backend",
