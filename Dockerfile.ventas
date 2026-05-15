@@ -1,0 +1,27 @@
+FROM maven:3.9.6-eclipse-temurin-21 AS builder
+WORKDIR /app
+
+COPY ventas/pom.xml ventas/pom.xml
+COPY ventas/.mvn ventas/.mvn
+COPY ventas/mvnw ventas/mvnw
+COPY ventas/mvnw.cmd ventas/mvnw.cmd
+
+
+WORKDIR /app/ventas
+RUN mvn -q -DskipTests dependency:go-offline
+
+COPY ventas/src src
+
+RUN mvn -q -DskipTests package
+
+FROM eclipse-temurin:21-jre
+RUN useradd -ms /bin/bash appuser
+WORKDIR /home/appuser
+
+COPY --from=builder /app/ventas/target/*.jar app.jar
+
+USER appuser
+EXPOSE 8080
+ENTRYPOINT ["java","-jar","app.jar"]
+
+
