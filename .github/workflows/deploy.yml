@@ -34,7 +34,7 @@ jobs:
         id: build-image-ventas
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: despacho-backend-ventas
+          ECR_REPOSITORY: despacho-ventas
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -f Dockerfile.ventas -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
@@ -61,7 +61,7 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.render-ventas.outputs.task-definition }}
-          service: ventas-service
+          service: despacho-ventas-service
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
 
@@ -89,7 +89,7 @@ jobs:
         id: build-image-despacho
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: despacho-backend-despacho
+          ECR_REPOSITORY: despacho-despacho
           IMAGE_TAG: ${{ github.sha }}
         run: |
           docker build -f Dockerfile.despacho -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
@@ -116,6 +116,6 @@ jobs:
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.render-despacho.outputs.task-definition }}
-          service: despacho-service
+          service: despacho-despacho-service
           cluster: ${{ env.ECS_CLUSTER }}
           wait-for-service-stability: true
